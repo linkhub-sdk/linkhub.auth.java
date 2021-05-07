@@ -43,15 +43,15 @@ import com.google.gson.Gson;
  * Linkhub TokenBuilder class.
  * @author KimSeongjun
  * @see http://www.linkhub.co.kr
- * @version 1.2.1
+ * @version 1.6.0
  * 
  * Update Log
- * (2017/08/25) - GetPartnerURL API added
+ * (2021/05/07) - Hash Algorithm Version UP
  */
 public class TokenBuilder {
 
-    private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
-    private static final String APIVersion = "1.0";
+    private static final String HMAC_SHA256_ALGORITHM = "HmacSHA256";
+    private static final String APIVersion = "2.0";
     private static final String DefaultServiceURL = "https://auth.linkhub.co.kr";
     
     private String _ServiceURL;
@@ -212,7 +212,7 @@ public class TokenBuilder {
         String invokeTime = getTime();
         	               
         String signTarget = "POST\n";
-        signTarget += md5Base64(btPostData)  + "\n";
+        signTarget += sha256Base64(btPostData)  + "\n";
 
         signTarget += invokeTime + "\n";
         if(forwardedIP != null && forwardedIP.isEmpty() == false) {
@@ -221,7 +221,7 @@ public class TokenBuilder {
         signTarget += APIVersion + "\n";
         signTarget += URI;
                 
-        String Signature = base64Encode(HMacSha1(base64Decode(getSecretKey()), signTarget.getBytes(Charset.forName("UTF-8"))));
+        String Signature = base64Encode(HMacSha256(base64Decode(getSecretKey()), signTarget.getBytes(Charset.forName("UTF-8"))));
         
         httpURLConnection.setRequestProperty("x-lh-date".toLowerCase(), invokeTime);
         httpURLConnection.setRequestProperty("x-lh-version".toLowerCase(), APIVersion);
@@ -642,11 +642,11 @@ public class TokenBuilder {
         return _SecretKey;
     }
     
-    private static String md5Base64(byte[] input) {
+    private static String sha256Base64(byte[] input) {
         MessageDigest md;
         byte[] btResult = null;
         try {
-            md = MessageDigest.getInstance("MD5");
+            md = MessageDigest.getInstance("SHA-256");
             btResult = md.digest(input);
         } catch (NoSuchAlgorithmException e) {    }
         
@@ -661,17 +661,17 @@ public class TokenBuilder {
         return DatatypeConverter.printBase64Binary(input);
     }
     
-    private static byte[] HMacSha1(byte[] key, byte[] input) throws LinkhubException {
+    private static byte[] HMacSha256(byte[] key, byte[] input) throws LinkhubException {
         try
-        {
-            SecretKeySpec signingKey = new SecretKeySpec(key, HMAC_SHA1_ALGORITHM);
-            Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
+        {	
+            SecretKeySpec signingKey = new SecretKeySpec(key, HMAC_SHA256_ALGORITHM);
+            Mac mac = Mac.getInstance(HMAC_SHA256_ALGORITHM);
             mac.init(signingKey);
             return mac.doFinal(input);
         }
         catch(Exception e) 
         {
-            throw new LinkhubException(-99999999, "Fail to Calculate HMAC-SHA1, Please check your SecretKey.",e);
+            throw new LinkhubException(-99999999, "Fail to Calculate HMAC-SHA256, Please check your SecretKey.",e);
         }
     }
     

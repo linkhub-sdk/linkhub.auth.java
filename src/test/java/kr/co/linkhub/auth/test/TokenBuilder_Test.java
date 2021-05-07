@@ -41,6 +41,8 @@ public class TokenBuilder_Test {
 		assertNotNull(token);
 		
 		System.out.println(token.getSession_token());
+		System.out.println(token.getExpiration());
+		System.out.println(token.getLinkID());
 		assertNotNull(token.getSession_token());
 		
 		assertEquals("TESTER", token.getLinkID());
