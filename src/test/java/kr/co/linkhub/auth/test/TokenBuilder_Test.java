@@ -22,30 +22,21 @@ public class TokenBuilder_Test {
     @Test
     public void base64_encode_Test() {
 
-        String base64Str = "인코딩 테스트 문자열 테스트테스트";
+        String encodeData = "asd;d-9383730983822103==32312-==;lkj zx l;kasdjiqw j  asidjwqlkjas   asdo;qwijdaskl!#@$&%^@(_@+#_#-=393928109283W_)@!(#      ";
 
-        byte[] btBase64Str = base64Str.getBytes();
+        byte[] btEncodeData = encodeData.getBytes();
 
-        try {
-            String result = base64Converter.encode(btBase64Str);
-            System.out.println(result);
-        } catch (LinkhubException e) {
-            System.out.println(e.getCode());
-            System.out.println(e.getMessage());
-        }
+        String result = base64Converter.encode(btEncodeData);
+        System.out.println(result);
     }
 
     @Test
     public void base64_decode_Test() {
 
-        try {
-            byte[] decodeByte = base64Converter .decode("7J247L2U65SpIO2FjOyKpO2KuCDrrLjsnpDsl7Qg7YWM7Iqk7Yq47YWM7Iqk7Yq4");
-            System.out.println(new String(decodeByte));
+        String base64Str = "YXNkO2QtOTM4MzczMDk4MzgyMjEwMz09MzIzMTItPT07bGtqIHp4IGw7a2FzZGppcXcgaiAgYXNpZGp3cWxramFzICAgYXNkbztxd2lqZGFza2whI0AkJiVeQChfQCsjXyMtPTM5MzkyODEwOTI4M1dfKUAhKCMgICAgICA";
+        byte[] btDecodeData = base64Converter.decode(base64Str);
+        System.out.println(new String(btDecodeData));
 
-        } catch (LinkhubException e) {
-            System.out.println(e.getCode());
-            System.out.println(e.getMessage());
-        }
     }
 
     @Test

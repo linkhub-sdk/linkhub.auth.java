@@ -11,34 +11,30 @@ public class base64Converter {
         return encodeTable[i & 0x3F];
     }
 
-    public static String encode(byte[] input) throws LinkhubException {
+    public static String encode(byte[] input) {
         char[] result = new char[((input.length + 2) / 3) * 4];
 
         int resultIndex = 0;
         int checkLength = 0;
 
-        try {
-            for (int i = 0; i < input.length; i = i + 3) {
-                checkLength = input.length - i;
-                if (checkLength == 2) {
-                    result[resultIndex++] = getEncode(input[i] >> 2);
-                    result[resultIndex++] = getEncode(((input[i] & 0x3) << 4) | ((input[i + 1] >> 4) & 0xF));
-                    result[resultIndex++] = getEncode((input[i + 1] & 0xF) << 2);
-                    result[resultIndex++] = '=';
-                } else if (checkLength == 1) {
-                    result[resultIndex++] = getEncode(input[i] >> 2);
-                    result[resultIndex++] = getEncode(((input[i]) & 0x3) << 4);
-                    result[resultIndex++] = '=';
-                    result[resultIndex++] = '=';
-                } else {
-                    result[resultIndex++] = getEncode(input[i] >> 2);
-                    result[resultIndex++] = getEncode(((input[i] & 0x3) << 4) | ((input[i + 1] >> 4) & 0xF));
-                    result[resultIndex++] = getEncode(((input[i + 1] & 0xF) << 2) | ((input[i + 2] >> 6) & 0x3));
-                    result[resultIndex++] = getEncode(input[i + 2] & 0x3F);
-                }
+        for (int i = 0; i < input.length; i = i + 3) {
+            checkLength = input.length - i;
+            if (checkLength == 2) {
+                result[resultIndex++] = getEncode(input[i] >> 2);
+                result[resultIndex++] = getEncode(((input[i] & 0x3) << 4) | ((input[i + 1] >> 4) & 0xF));
+                result[resultIndex++] = getEncode((input[i + 1] & 0xF) << 2);
+                result[resultIndex++] = '=';
+            } else if (checkLength == 1) {
+                result[resultIndex++] = getEncode(input[i] >> 2);
+                result[resultIndex++] = getEncode(((input[i]) & 0x3) << 4);
+                result[resultIndex++] = '=';
+                result[resultIndex++] = '=';
+            } else {
+                result[resultIndex++] = getEncode(input[i] >> 2);
+                result[resultIndex++] = getEncode(((input[i] & 0x3) << 4) | ((input[i + 1] >> 4) & 0xF));
+                result[resultIndex++] = getEncode(((input[i + 1] & 0xF) << 2) | ((input[i + 2] >> 6) & 0x3));
+                result[resultIndex++] = getEncode(input[i + 2] & 0x3F);
             }
-        } catch (Exception e) {
-            throw new LinkhubException(-99999999, "Fail to encode Data.", e);
         }
 
         return new String(result);
@@ -57,7 +53,7 @@ public class base64Converter {
         decodeTable['='] = PADDING;
     }
 
-    public static byte[] decode(String input) throws LinkhubException {
+    public static byte[] decode(String input) {
         int resultLength = getResultLength(input);
 
         byte[] result = new byte[resultLength];
@@ -65,29 +61,24 @@ public class base64Converter {
 
         byte[] splitBuff = new byte[4];
         int bufIndex = 0;
-        
-        try {
-            for (int i = 0; i < input.length(); i++) {
-                char inputChar = input.charAt(i);
-                byte decodeValue = decodeTable[inputChar];
 
-                if (decodeValue != -1) {
-                    splitBuff[bufIndex++] = decodeValue;
-                }
+        for (int i = 0; i < input.length(); i++) {
+            char inputChar = input.charAt(i);
+            byte decodeValue = decodeTable[inputChar];
 
-                if (bufIndex == 4) {
-                    result[resultIndex++] = (byte) ((splitBuff[0] << 2) | (splitBuff[1] >> 4));
-                    if (splitBuff[2] != PADDING)
-                        result[resultIndex++] = (byte) ((splitBuff[1] << 4) | (splitBuff[2] >> 2));
-                    if (splitBuff[3] != PADDING)
-                        result[resultIndex++] = (byte) ((splitBuff[2] << 6) | (splitBuff[3]));
-                    bufIndex = 0;
-                }
+            if (decodeValue != -1) {
+                splitBuff[bufIndex++] = decodeValue;
             }
-        } catch (Exception e) {
-            throw new LinkhubException(-99999999, "Fail to decode SecretKey, Please check your SecretKey.", e);
+
+            if (bufIndex == 4) {
+                result[resultIndex++] = (byte) ((splitBuff[0] << 2) | (splitBuff[1] >> 4));
+                if (splitBuff[2] != PADDING)
+                    result[resultIndex++] = (byte) ((splitBuff[1] << 4) | (splitBuff[2] >> 2));
+                if (splitBuff[3] != PADDING)
+                    result[resultIndex++] = (byte) ((splitBuff[2] << 6) | (splitBuff[3]));
+                bufIndex = 0;
+            }
         }
-        
         return result;
     }
 
