@@ -35,7 +35,6 @@ import java.util.zip.GZIPInputStream;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.Gson;
 
@@ -117,11 +116,11 @@ public class TokenBuilder {
     }
     
     public void setProxyIP(String IP) {
-    	this._ProxyIP = IP;
+        this._ProxyIP = IP;
     }
     
     public void setProxyPort(int PORT) {
-    	this._ProxyPort = PORT;
+        this._ProxyPort = PORT;
     }
     /**
      * 
@@ -141,8 +140,8 @@ public class TokenBuilder {
      * @return this for method chaining.
      */
     public TokenBuilder useLocalTimeYN(boolean useLocalTimeYN) {
-    	this._useLocalTime = useLocalTimeYN;
-    	return this;
+        this._useLocalTime = useLocalTimeYN;
+        return this;
     }
     
     /**
@@ -183,7 +182,7 @@ public class TokenBuilder {
      */
     public Token build(String AccessID, String forwardedIP) throws LinkhubException {
        
-    	if(_recentServiceID == null || _recentServiceID.isEmpty()) throw new LinkhubException(-99999999,"서비스아이디가 입력되지 않았습니다.");
+        if(_recentServiceID == null || _recentServiceID.isEmpty()) throw new LinkhubException(-99999999,"서비스아이디가 입력되지 않았습니다.");
         
         HttpURLConnection httpURLConnection;
         String URI = "/" +  _recentServiceID + "/Token";
@@ -192,10 +191,10 @@ public class TokenBuilder {
             URL url = new URL(_ServiceURL + URI);
             
             if(_ProxyIP != null && _ProxyPort != null) {
-            	Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
-            	httpURLConnection = (HttpURLConnection) url.openConnection(prx);
+                Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
+                httpURLConnection = (HttpURLConnection) url.openConnection(prx);
             } else {
-            	httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection = (HttpURLConnection) url.openConnection();
             }
             
         } catch (Exception e) {
@@ -210,7 +209,7 @@ public class TokenBuilder {
         byte[] btPostData = PostData.getBytes(Charset.forName("UTF-8"));
         
         String invokeTime = getTime();
-        	               
+                           
         String signTarget = "POST\n";
         signTarget += sha256Base64(btPostData)  + "\n";
 
@@ -325,10 +324,10 @@ public class TokenBuilder {
             URL url = new URL(_ServiceURL + URI);
             
             if(_ProxyIP != null && _ProxyPort != null) {
-            	Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
-            	httpURLConnection = (HttpURLConnection) url.openConnection(prx);
+                Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
+                httpURLConnection = (HttpURLConnection) url.openConnection(prx);
             } else {
-            	httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection = (HttpURLConnection) url.openConnection();
             }
             
         } catch (Exception e) {
@@ -405,11 +404,11 @@ public class TokenBuilder {
             URL url = new URL(_ServiceURL + URI);
             
             if(_ProxyIP != null && _ProxyPort != null) {
-            	Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
-            	httpURLConnection = (HttpURLConnection) url.openConnection(prx);
-            	
+                Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
+                httpURLConnection = (HttpURLConnection) url.openConnection(prx);
+                
             } else {
-            	httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection = (HttpURLConnection) url.openConnection();
             }
             
         } catch (Exception e) {
@@ -487,10 +486,10 @@ public class TokenBuilder {
             URL url = new URL(_ServiceURL + URI);
             
             if(_ProxyIP != null && _ProxyPort != null) {
-            	Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
-            	httpURLConnection = (HttpURLConnection) url.openConnection(prx);
+                Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
+                httpURLConnection = (HttpURLConnection) url.openConnection(prx);
             } else {
-            	httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection = (HttpURLConnection) url.openConnection();
             }
             
         } catch (Exception e) {
@@ -553,27 +552,27 @@ public class TokenBuilder {
      * @throws LinkhubException
      */
     public String getTime() throws LinkhubException {    
-    	
-    	if(_useLocalTime) {
-        	
-        	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        	format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        	        	
-        	String localTime = format.format(System.currentTimeMillis());
-        	
-        	return localTime;
-    	}
-    	
+        
+        if(_useLocalTime) {
+            
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        
+            String localTime = format.format(System.currentTimeMillis());
+            
+            return localTime;
+        }
+        
         HttpURLConnection httpURLConnection;
         String URI = "/Time";
         try {
             URL url = new URL(_ServiceURL + URI);
             
             if(_ProxyIP != null && _ProxyPort != null) {
-            	Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
-            	httpURLConnection = (HttpURLConnection) url.openConnection(prx);
+                Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
+                httpURLConnection = (HttpURLConnection) url.openConnection(prx);
             } else {
-            	httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection = (HttpURLConnection) url.openConnection();
             }
             
         } catch (Exception e) {
@@ -642,7 +641,7 @@ public class TokenBuilder {
         return _SecretKey;
     }
     
-    private static String sha256Base64(byte[] input) {
+    private static String sha256Base64(byte[] input) throws LinkhubException{
         MessageDigest md;
         byte[] btResult = null;
         try {
@@ -653,17 +652,17 @@ public class TokenBuilder {
         return base64Encode(btResult);
     }
     
-    private static byte[] base64Decode(String input) {
-        return DatatypeConverter.parseBase64Binary(input);
+    private static byte[] base64Decode(String input) throws LinkhubException{
+        return base64Converter.decode(input);
     }
     
-    private static String base64Encode(byte[] input) {
-        return DatatypeConverter.printBase64Binary(input);
+    private static String base64Encode(byte[] input) throws LinkhubException{
+        return base64Converter.encode(input);
     }
     
     private static byte[] HMacSha256(byte[] key, byte[] input) throws LinkhubException {
         try
-        {	
+        {   
             SecretKeySpec signingKey = new SecretKeySpec(key, HMAC_SHA256_ALGORITHM);
             Mac mac = Mac.getInstance(HMAC_SHA256_ALGORITHM);
             mac.init(signingKey);
@@ -773,7 +772,5 @@ public class TokenBuilder {
         public String access_id;
         public List<String> scope = new ArrayList<String>();
     }
-    
-    
 
 }
