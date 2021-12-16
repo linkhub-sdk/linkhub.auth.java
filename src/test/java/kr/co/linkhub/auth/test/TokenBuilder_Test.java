@@ -12,7 +12,7 @@ import org.junit.Test;
 import kr.co.linkhub.auth.LinkhubException;
 import kr.co.linkhub.auth.Token;
 import kr.co.linkhub.auth.TokenBuilder;
-import kr.co.linkhub.auth.base64Converter;
+import kr.co.linkhub.auth.Base64;
 
 public class TokenBuilder_Test {
 
@@ -22,19 +22,19 @@ public class TokenBuilder_Test {
     @Test
     public void base64_encode_Test() {
 
-        String encodeData = "asd;d-9383730983822103==32312-==;lkj zx l;kasdjiqw j  asidjwqlkjas   asdo;qwijdaskl!#@$&%^@(_@+#_#-=393928109283W_)@!(#      ";
+        String encodeData = "asd;d-한글!@#*$&(==32312-==;lkj zx l;kasdjiqw j  asidjwqlkjas   asdo;qwijdaskl!#@$&%^@(_@+#_#-=393928109283W_)@!(#      ";
 
         byte[] btEncodeData = encodeData.getBytes();
 
-        String result = base64Converter.encode(btEncodeData);
+        String result = Base64.encode(btEncodeData);
         System.out.println(result);
     }
 
     @Test
     public void base64_decode_Test() {
 
-        String base64Str = "YXNkO2QtOTM4MzczMDk4MzgyMjEwMz09MzIzMTItPT07bGtqIHp4IGw7a2FzZGppcXcgaiAgYXNpZGp3cWxramFzICAgYXNkbztxd2lqZGFza2whI0AkJiVeQChfQCsjXyMtPTM5MzkyODEwOTI4M1dfKUAhKCMgICAgICA";
-        byte[] btDecodeData = base64Converter.decode(base64Str);
+        String base64Str = "YXNkO2Qt7ZWc6riAIUAjKiQmKD09MzIzMTItPT07bGtqIHp4IGw7a2FzZGppcXcgaiAgYXNpZGp3cWxramFzICAgYXNkbztxd2lqZGFza2whI0AkJiVeQChfQCsjXyMtPTM5MzkyODEwOTI4M1dfKUAhKCMgICAgICA=";
+        byte[] btDecodeData = Base64.decode(base64Str);
         System.out.println(new String(btDecodeData));
 
     }

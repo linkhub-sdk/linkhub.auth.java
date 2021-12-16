@@ -222,12 +222,12 @@ public class TokenBuilder {
         
         byte[] btSecetKey;
         try {
-            btSecetKey = base64Converter.decode(getSecretKey());
+            btSecetKey = Base64.decode(getSecretKey());
         } catch(Exception e) {
             throw new LinkhubException(-99999999, "Fail to decode SecretKey, Please check your SecretKey.", e);
         }
 
-        String Signature = base64Converter.encode(HMacSha256(btSecetKey, signTarget.getBytes(Charset.forName("UTF-8"))));
+        String Signature = Base64.encode(HMacSha256(btSecetKey, signTarget.getBytes(Charset.forName("UTF-8"))));
         
         httpURLConnection.setRequestProperty("x-lh-date".toLowerCase(), invokeTime);
         httpURLConnection.setRequestProperty("x-lh-version".toLowerCase(), APIVersion);
@@ -656,7 +656,7 @@ public class TokenBuilder {
             btResult = md.digest(input);
         } catch (NoSuchAlgorithmException e) {    }
         
-        return base64Converter.encode(btResult);
+        return Base64.encode(btResult);
     }
     
     
