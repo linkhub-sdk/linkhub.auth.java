@@ -37,7 +37,7 @@ public class TokenBuilder {
 
     private static final String HMAC_SHA256_ALGORITHM = "HmacSHA256";
     private static final String APIVersion = "2.0";
-    private static final String DefaultServiceURL = "https://dev-auth.linkhub.kr";
+    private static final String DefaultServiceURL = "https://auth.linkhub.co.kr";
     
     private String _ServiceURL;
     private String _ProxyIP;
