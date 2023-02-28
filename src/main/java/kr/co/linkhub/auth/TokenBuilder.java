@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.net.URL;
@@ -379,6 +380,135 @@ public class TokenBuilder {
         }
         
         return _gsonParser.fromJson(Result, PointResult.class).getRemainPoint();
+    }
+    
+    public MemberPointInfo[] listMemberPointInfo(String BearerToken, String[] MemberCorpNums) throws LinkhubException{
+    	
+    	if(BearerToken == null || BearerToken.isEmpty()) throw new LinkhubException(-99999999,"BearerToken이 입력되지 않았습니다.");
+        if(_recentServiceID == null || _recentServiceID.isEmpty()) throw new LinkhubException(-99999999,"서비스아이디가 입력되지 않았습니다.");
+        if (MemberCorpNums == null || MemberCorpNums.length == 0)
+            throw new LinkhubException(-99999999, "회원 사업자번호 목록이 입력되지 않았습니다.");
+        
+        String PostData = _gsonParser.toJson(MemberCorpNums);
+        
+        HttpURLConnection httpURLConnection;
+        
+        String URI = "/" +  _recentServiceID + "/UserPointInfo";
+        try {
+        	URL url = new URL(_ServiceURL + URI);
+	        
+	        
+	        if(_ProxyIP != null && _ProxyPort != null) {
+	            Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
+	            httpURLConnection = (HttpURLConnection) url.openConnection(prx);
+	        } else {
+	            httpURLConnection = (HttpURLConnection) url.openConnection();
+	        }
+	        
+	    } catch (Exception e) {
+	        throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
+	    }
+        
+        httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
+        httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=utf8");
+        httpURLConnection.setRequestProperty("Accept-Encoding", "gzip");
+        try {
+            httpURLConnection.setRequestMethod("POST");
+        } catch (ProtocolException e1) {
+        }
+
+        httpURLConnection.setUseCaches(false);
+        httpURLConnection.setDoOutput(true);
+        
+        
+        if ((PostData == null || PostData.isEmpty()) == false) {
+
+            byte[] btPostData = PostData.getBytes(Charset.forName("UTF-8"));
+
+            httpURLConnection.setRequestProperty("Content-Length", String.valueOf(btPostData.length));
+
+            DataOutputStream output = null;
+
+            try {
+                output = new DataOutputStream(httpURLConnection.getOutputStream());
+                output.write(btPostData);
+                output.flush();
+            } catch (Exception e) {
+                throw new LinkhubException(-99999999, "Fail to POST data to Server - listMemberPointInfo", e);
+            } finally {
+                try {
+                    if (output != null) {
+                        output.close();
+                    }
+                } catch (IOException e1) {
+                    throw new LinkhubException(-99999999, "Linkhub httppost func DataOutputStream close() Exception",
+                            e1);
+                }
+            }
+        }
+
+        String ResultString = parseResponse(httpURLConnection);
+
+        return _gsonParser.fromJson(ResultString, MemberPointInfo[].class);
+        
+    }
+    
+    private String parseResponse(HttpURLConnection httpURLConnection) throws LinkhubException {
+
+        String result = "";
+        InputStream input = null;
+        LinkhubException exception = null;
+
+        try {
+            input = httpURLConnection.getInputStream();
+
+            if (null != httpURLConnection.getContentEncoding()
+                    && httpURLConnection.getContentEncoding().equals("gzip")) {
+                result = fromGzipStream(input);
+            } else {
+                result = fromStream(input);
+            }
+        } catch (IOException e) {
+            InputStream errorIs = null;
+            Error error = null;
+
+            try {
+                errorIs = httpURLConnection.getErrorStream();
+                result = fromStream(errorIs);
+                error = _gsonParser.fromJson(result, Error.class);
+            } catch (Exception ignored) {
+
+            } finally {
+                try {
+                    if (errorIs != null) {
+                        errorIs.close();
+                    }
+                } catch (IOException e1) {
+                    throw new LinkhubException(-99999999, "Linkhub parseResponse func InputStream close() Exception",
+                            e1);
+                }
+            }
+
+            if (error == null) {
+                exception = new LinkhubException(-99999999, "Fail to receive data from Server.", e);
+            } else {
+                exception = new LinkhubException(error.getCode(), error.getMessage());
+            }
+            
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException e2) {
+                throw new LinkhubException(-99999999, "Linkhub parseResponse func InputStream close() Exception", e2);
+            }
+        }
+
+        if (exception != null)
+            throw exception;
+
+        return result;
     }
     
     /**
@@ -754,9 +884,12 @@ public class TokenBuilder {
         }
     }
     
+    
     class TokenRequest {
         public String access_id;
         public List<String> scope = new ArrayList<String>();
     }
+    
+    
 
 }
