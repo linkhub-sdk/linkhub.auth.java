@@ -302,6 +302,80 @@ public class TokenBuilder {
     
     }
     
+    public MemberPointDetail getBalanceDetail(String BearerToken) throws LinkhubException {
+        if(BearerToken == null || BearerToken.isEmpty()) throw new LinkhubException(-99999999,"BearerToken이 입력되지 않았습니다.");
+        if(_recentServiceID == null || _recentServiceID.isEmpty()) throw new LinkhubException(-99999999,"서비스아이디가 입력되지 않았습니다.");
+        
+        HttpURLConnection httpURLConnection;
+        String URI = "/" +  _recentServiceID + "/TotalPoint";
+        try {
+            URL url = new URL(_ServiceURL + URI);
+            
+            if(_ProxyIP != null && _ProxyPort != null) {
+                Proxy prx =  new Proxy(Type.HTTP, new InetSocketAddress(_ProxyIP, _ProxyPort));
+                httpURLConnection = (HttpURLConnection) url.openConnection(prx);
+            } else {
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+            }
+            
+        } catch (Exception e) {
+            throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
+        }
+
+        httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
+        
+        String Result = "";
+        InputStream input = null;
+        
+        try {
+            input = httpURLConnection.getInputStream();
+                
+            if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                Result = fromGzipStream(input);
+            } else {
+                Result = fromStream(input);
+            }
+            
+        } catch (IOException e) {
+            
+            Error error = null;
+            InputStream is = null;
+            
+            try    {
+                is = httpURLConnection.getErrorStream();
+                Result = fromStream(is);                
+                error = _gsonParser.fromJson(Result, Error.class);
+            } catch(Exception E) {
+                
+            } finally {
+                if (is != null){
+                    try {
+                        is.close();
+                    } catch (IOException e1) {
+                        throw new LinkhubException(-99999999, 
+                                "Linkhub getBalance func Error inputstream close exception.",e);
+                    }
+                }
+            }
+            
+            if (error == null)
+                throw new LinkhubException(-99999999, "Fail to receive data from Server.",e);
+            else
+                throw new LinkhubException(error.code,error.message);
+        } finally {
+            if (input != null){
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    throw new LinkhubException(-99999999, 
+                            "Linkhub getBalance func inputstream close exception.",e);
+                }
+            }
+        }
+        
+        return _gsonParser.fromJson(Result, MemberPointDetail.class);
+    }
+    
     /**
      * 
      * @param BearerToken Token.getSession_Token()

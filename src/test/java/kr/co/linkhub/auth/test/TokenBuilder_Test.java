@@ -9,10 +9,11 @@ import java.util.List;
 
 import org.junit.Test;
 
+import kr.co.linkhub.auth.Base64;
 import kr.co.linkhub.auth.LinkhubException;
+import kr.co.linkhub.auth.MemberPointDetail;
 import kr.co.linkhub.auth.Token;
 import kr.co.linkhub.auth.TokenBuilder;
-import kr.co.linkhub.auth.Base64;
 
 public class TokenBuilder_Test {
 
@@ -123,6 +124,25 @@ public class TokenBuilder_Test {
         assertTrue(remainPoint >= 0);
 
         System.out.println("잔여포인트 : " + String.valueOf(remainPoint));
+
+    }
+    
+    @Test
+    public void GetBalanceDetail_Success_Test() throws LinkhubException {
+        TokenBuilder tokenBuilder = TokenBuilder.newInstance(LinkID, SecretKey);
+
+        Token token = tokenBuilder.ServiceID("POPBILL_TEST").addScope("member").addScope("110").build("1234567890");
+
+        assertNotNull(token);
+
+        assertNotNull(token.getSession_token());
+
+        MemberPointDetail rst = tokenBuilder.getBalanceDetail(token.getSession_token());
+
+
+        System.out.println("통합포인트 : " + String.valueOf(rst.getTotalPoint()));
+        System.out.println("잔여포인트 : " + String.valueOf(rst.getChargePoint()));
+        System.out.println("보너스포인트 : " + String.valueOf(rst.getBonusPoint()));
 
     }
 
