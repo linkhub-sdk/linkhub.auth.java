@@ -22,7 +22,8 @@ public class PartnerAPI_Test {
 				.ServiceID("POPBILL_TEST")  // 운용환경은 "POPBILL", 테스트환경은 "POPBILL_TEST" 기재
 				.addScope("partner")        // 회원목록을 응답받기위해 "member"아닌 "partner" 기재
 				.addScope("110");           // 전자세금계산서 아이템코드 "110" 기재
-		
+				
+	
 		Token token = tokenBuilder.build();
 		
 		assertNotNull(token.getSession_token());

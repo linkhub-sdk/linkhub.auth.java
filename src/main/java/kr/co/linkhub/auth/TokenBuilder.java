@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.zip.GZIPInputStream;
 
@@ -39,7 +40,9 @@ public class TokenBuilder {
     private static final String HMAC_SHA256_ALGORITHM = "HmacSHA256";
     private static final String APIVersion = "2.0";
     private static final String DefaultServiceURL = "https://auth.linkhub.co.kr";
+    private static final String[] apiHeaderList = { "Authorization", "Accept-Encoding", "Connection", "Content-Type", "Content-Length", "X-HTTP-Method-Override" };
     
+    private Map<String, String> _customHeader;
     private String _ServiceURL;
     private String _ProxyIP;
     private Integer _ProxyPort;
@@ -121,6 +124,10 @@ public class TokenBuilder {
     
         return this;
     }
+    public TokenBuilder addCustomHeader(Map<String, String> customHeader) {
+    	this._customHeader = customHeader;
+    	return this;
+    }
     /**
      * 
      * @param useLocalTimeYN 로컬타임 여부
@@ -130,6 +137,7 @@ public class TokenBuilder {
         this._useLocalTime = useLocalTimeYN;
         return this;
     }
+    
     
     /**
      * 
@@ -225,6 +233,9 @@ public class TokenBuilder {
         httpURLConnection.setRequestProperty("Content-Type","application/json; charset=utf8");
         httpURLConnection.setRequestProperty("Content-Length",String.valueOf(btPostData.length));
         
+        		
+        checkCustomHeaderValidation(httpURLConnection);
+                
         DataOutputStream output = null;
         
         try {
@@ -323,6 +334,8 @@ public class TokenBuilder {
         }
 
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
+        
+        checkCustomHeaderValidation(httpURLConnection);
         
         String Result = "";
         InputStream input = null;
@@ -486,6 +499,9 @@ public class TokenBuilder {
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
         httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=utf8");
         httpURLConnection.setRequestProperty("Accept-Encoding", "gzip");
+        
+        checkCustomHeaderValidation(httpURLConnection);
+        
         try {
             httpURLConnection.setRequestMethod("POST");
         } catch (ProtocolException e1) {
@@ -928,7 +944,25 @@ public class TokenBuilder {
         }
         
         return sb.toString();
-    }    
+    }
+    
+    private void checkCustomHeaderValidation(HttpURLConnection httpURLConnection) throws LinkhubException{
+    	
+  	  if(this._customHeader != null && this._customHeader.size() > 0) {
+  		  	for(String customHeader : this._customHeader.keySet()){
+  		  		
+  			  for(String apiHeader : apiHeaderList) {
+  			  	  if(customHeader.toLowerCase().equals(apiHeader.toLowerCase())){
+  					  throw new LinkhubException(-99999999, "허용되지 않은 Custom Header 입니다."+"["+customHeader+"]");
+  				  } else if ("x-pb".equals(customHeader.toLowerCase().substring(0, 4)) || "x-lh".equals(customHeader.toLowerCase().substring(0, 4))  
+  						  || "x-bc".equals(customHeader.toLowerCase().substring(0, 4))) {
+  					  throw new LinkhubException(-99999999, "허용되지 않은 Custom Header 입니다."+"["+customHeader+"]");
+  				  }
+  			  }
+  			  httpURLConnection.setRequestProperty(customHeader, this._customHeader.get(customHeader));
+  		  }
+  	  }
+    }
     
     class PointResult {
         private double remainPoint;
