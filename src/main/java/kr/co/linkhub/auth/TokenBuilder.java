@@ -30,7 +30,7 @@ import com.google.gson.Gson;
  * Linkhub TokenBuilder class.
  * @author KimSeongjun
  * @see http://www.linkhub.co.kr
- * @version 1.6.0
+ * @version 1.9.0
  * 
  * Update Log
  * (2021/05/07) - Hash Algorithm Version UP
@@ -417,6 +417,8 @@ public class TokenBuilder {
 
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
         
+        checkCustomHeaderValidation(httpURLConnection);
+        
         String Result = "";
         InputStream input = null;
         
@@ -630,6 +632,8 @@ public class TokenBuilder {
 
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
         
+        checkCustomHeaderValidation(httpURLConnection);
+        
         String Result = "";
         InputStream input = null;
         
@@ -710,6 +714,7 @@ public class TokenBuilder {
         }
         
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
+        checkCustomHeaderValidation(httpURLConnection);
         
         try {
             input = httpURLConnection.getInputStream();
@@ -794,6 +799,8 @@ public class TokenBuilder {
         
         String Result = "";
         InputStream input = null;
+        
+        checkCustomHeaderValidation(httpURLConnection);
         
         try {
             input = httpURLConnection.getInputStream();
