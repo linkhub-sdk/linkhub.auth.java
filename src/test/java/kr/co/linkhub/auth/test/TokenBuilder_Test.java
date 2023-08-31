@@ -50,11 +50,8 @@ public class TokenBuilder_Test {
         
         TokenBuilder tokenBuilder = TokenBuilder.newInstance(LinkID, SecretKey).ServiceID("POPBILL").addScope("member")
                 .addScope("110").addCustomHeader(customHeader);
-        
-        
 
         Token token = tokenBuilder.build("1234567890");
-        tokenBuilder.setServiceURL("https://webhook.site/8d2fe7f0-be21-463b-bdf5-26e0139c8878");
 //      tokenBuilder.setProxyIP("192.168.0.215");
 //      tokenBuilder.setProxyPort(8081);
 
