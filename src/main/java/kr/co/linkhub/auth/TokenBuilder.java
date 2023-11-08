@@ -277,7 +277,11 @@ public class TokenBuilder {
             
             try {
                 is = httpURLConnection.getErrorStream();
-                Result = fromStream(is);
+                if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                    Result = fromGzipStream(is);
+                } else {
+                    Result = fromStream(is);
+                }
                 
                 error = _gsonParser.fromJson(Result, Error.class);
             }
@@ -356,7 +360,11 @@ public class TokenBuilder {
             
             try    {
                 is = httpURLConnection.getErrorStream();
-                Result = fromStream(is);                
+                if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                    Result = fromGzipStream(is);
+                } else {
+                    Result = fromStream(is);
+                }                
                 error = _gsonParser.fromJson(Result, Error.class);
             } catch(Exception E) {
                 
@@ -438,7 +446,11 @@ public class TokenBuilder {
             
             try    {
                 is = httpURLConnection.getErrorStream();
-                Result = fromStream(is);                
+                if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                	Result = fromGzipStream(is);
+                } else {
+                	Result = fromStream(is);
+                }                
                 error = _gsonParser.fromJson(Result, Error.class);
             } catch(Exception E) {
                 
@@ -566,7 +578,11 @@ public class TokenBuilder {
 
             try {
                 errorIs = httpURLConnection.getErrorStream();
-                result = fromStream(errorIs);
+                if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                	result = fromGzipStream(errorIs);
+                } else {
+                	result = fromStream(errorIs);
+                }
                 error = _gsonParser.fromJson(result, Error.class);
             } catch (Exception ignored) {
 
@@ -651,7 +667,11 @@ public class TokenBuilder {
             
             try    {
                 is = httpURLConnection.getErrorStream();
-                Result = fromStream(is);
+                if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                	Result = fromGzipStream(is);
+                } else {
+                	Result = fromStream(is);
+                }
                 error = _gsonParser.fromJson(Result, Error.class);
             } catch(Exception E) {
                 
@@ -730,7 +750,11 @@ public class TokenBuilder {
 
             try    {
                 is = httpURLConnection.getErrorStream();
-                Result = fromStream(is);
+                if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                	Result = fromGzipStream(is);
+                } else {
+                	Result = fromStream(is);
+                }
                 error = _gsonParser.fromJson(Result, Error.class);
             }
             catch(Exception E) {
@@ -816,7 +840,11 @@ public class TokenBuilder {
             InputStream is = null;
             try    {
                 is = httpURLConnection.getErrorStream();
-                Result = fromStream(is);
+                if (null != httpURLConnection.getContentEncoding() && httpURLConnection.getContentEncoding().equals("gzip")) {
+                	Result = fromGzipStream(is);
+                } else {
+                	Result = fromStream(is);
+                }
                 error = _gsonParser.fromJson(Result, Error.class);
             }
             catch(Exception E) {

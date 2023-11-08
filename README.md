@@ -1,4 +1,4 @@
-linkhub.auth.java
+inkhub.auth.java
 =================
 
 Linkhub SDK for JAVA
@@ -10,5 +10,5 @@ Add reference by maven
 		<dependency>
 			<groupId>kr.co.linkhub</groupId>
 			<artifactId>linkhub-auth</artifactId>
-			<version>1.9.0</version>
+			<version>1.9.1</version>
 		</dependency>
