@@ -196,8 +196,8 @@ public class TokenBuilder {
             throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
         }
 
-        httpURLConnection.setConnectTimeout(10);
-        httpURLConnection.setReadTimeout(180);
+        httpURLConnection.setConnectTimeout(10*1000);
+        httpURLConnection.setReadTimeout(180*1000);
 
         TokenRequest request = new TokenRequest();
         request.access_id = AccessID;
@@ -340,8 +340,8 @@ public class TokenBuilder {
             throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
         }
 
-        httpURLConnection.setConnectTimeout(10);
-        httpURLConnection.setReadTimeout(180);
+        httpURLConnection.setConnectTimeout(10 * 1000);
+        httpURLConnection.setReadTimeout(180 * 1000);
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
         
         checkCustomHeaderValidation(httpURLConnection);
@@ -428,8 +428,8 @@ public class TokenBuilder {
             throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
         }
 
-        httpURLConnection.setConnectTimeout(10);
-        httpURLConnection.setReadTimeout(180);
+        httpURLConnection.setConnectTimeout(10*1000);
+        httpURLConnection.setReadTimeout(180*1000);
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
 
         checkCustomHeaderValidation(httpURLConnection);
@@ -517,8 +517,8 @@ public class TokenBuilder {
 	        throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
 	    }
 
-        httpURLConnection.setConnectTimeout(10);
-        httpURLConnection.setReadTimeout(180);
+        httpURLConnection.setConnectTimeout(10*1000);
+        httpURLConnection.setReadTimeout(180*1000);
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
         httpURLConnection.setRequestProperty("Content-Type", "application/json; charset=utf8");
         httpURLConnection.setRequestProperty("Accept-Encoding", "gzip");
@@ -655,8 +655,8 @@ public class TokenBuilder {
             throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
         }
 
-        httpURLConnection.setConnectTimeout(10);
-        httpURLConnection.setReadTimeout(180);
+        httpURLConnection.setConnectTimeout(10*1000);
+        httpURLConnection.setReadTimeout(180*1000);
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
         
         checkCustomHeaderValidation(httpURLConnection);
@@ -744,8 +744,8 @@ public class TokenBuilder {
             throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
         }
 
-        httpURLConnection.setConnectTimeout(10);
-        httpURLConnection.setReadTimeout(180);
+        httpURLConnection.setConnectTimeout(10*1000);
+        httpURLConnection.setReadTimeout(180*1000);
         httpURLConnection.setRequestProperty("Authorization","Bearer " + BearerToken);
         checkCustomHeaderValidation(httpURLConnection);
         
@@ -834,8 +834,8 @@ public class TokenBuilder {
             throw new LinkhubException(-99999999, "링크허브 서버 접속 실패",e);
         }
 
-        httpURLConnection.setConnectTimeout(10);
-        httpURLConnection.setReadTimeout(180);
+        httpURLConnection.setConnectTimeout(10*1000);
+        httpURLConnection.setReadTimeout(180*1000);
         
         String Result = "";
         InputStream input = null;
